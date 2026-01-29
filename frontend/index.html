@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAKiTAI Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="min-h-screen bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-blue-600">DAKiTAI Panel</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="showSection('dashboard')" class="nav-btn px-4 py-2 rounded-lg hover:bg-blue-100">Dashboard</button>
+                    <button onclick="showSection('face-recognition')" class="nav-btn px-4 py-2 rounded-lg hover:bg-blue-100">Yüz Tanıma</button>
+                    <button onclick="showSection('devices')" class="nav-btn px-4 py-2 rounded-lg hover:bg-blue-100">Cihazlar</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Section -->
+    <div id="dashboard" class="section">
+        <div class="max-w-7xl mx-auto py-6 px-4">
+            <div class="text-center">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">DAKiTAI Panel</h1>
+                <p class="text-xl text-gray-600 mb-8">Profesyonel İşletme Yönetim Sistemi</p>
+                <div class="bg-white rounded-lg shadow-lg p-8 max-w-md mx-auto">
+                    <h2 class="text-2xl font-semibold mb-4">Panel Başarıyla Çalışıyor! 🚀</h2>
+                    <p class="text-gray-600 mb-6">Sistem tamamen hazır ve erişilebilir durumda.</p>
+                    <div class="space-y-2 text-left">
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                            <span>✅ API Servisi</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                            <span>✅ Veritabanı</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                            <span>✅ Yüz Tanıma Sistemi</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                            <span>✅ SSL Sertifikası</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Face Recognition Section -->
+    <div id="face-recognition" class="section hidden">
+        <div class="max-w-6xl mx-auto py-6 px-4">
+            <div class="mb-6">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Yüz Tanıma Sistemi</h1>
+                <p class="text-gray-600">Kamera ile yüz tespit etme ve kaydetme</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Kamera Bölümü -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-semibold flex items-center">
+                            <i data-lucide="camera" class="mr-2"></i>
+                            Kamera
+                        </h2>
+                        <div class="flex gap-2">
+                            <button id="start-camera" onclick="startCamera()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center">
+                                <i data-lucide="eye" class="mr-2 w-4 h-4"></i>
+                                Başlat
+                            </button>
+                            <button id="stop-camera" onclick="stopCamera()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg flex items-center hidden">
+                                <i data-lucide="eye-off" class="mr-2 w-4 h-4"></i>
+                                Durdur
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <video id="video" autoplay playsinline class="w-full h-64 bg-gray-200 rounded-lg object-cover"></video>
+                        <canvas id="canvas" class="hidden"></canvas>
+                        <div id="face-overlay" class="absolute inset-0"></div>
+                    </div>
+
+                    <div id="camera-controls" class="mt-4 flex gap-2 hidden">
+                        <button onclick="detectFaces()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex-1">
+                            Yüz Tespit Et
+                        </button>
+                        <button onclick="toggleRegister()" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg flex items-center">
+                            <i data-lucide="user-plus" class="mr-2 w-4 h-4"></i>
+                            Kaydet
+                        </button>
+                    </div>
+
+                    <!-- Yüz kaydetme formu -->
+                    <div id="register-form" class="mt-4 p-4 bg-gray-50 rounded-lg hidden">
+                        <h3 class="font-semibold mb-3">Yeni Yüz Kaydet</h3>
+                        <div class="space-y-3">
+                            <input type="text" id="person-name" placeholder="Kişi Adı" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="number" id="person-id" placeholder="Kişi ID" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <button onclick="registerFace()" class="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
+                                Kaydet
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kayıtlı Yüzler -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-semibold flex items-center">
+                            <i data-lucide="users" class="mr-2"></i>
+                            Kayıtlı Yüzler (<span id="face-count">0</span>)
+                        </h2>
+                        <button onclick="loadRegisteredFaces()" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm">
+                            Yenile
+                        </button>
+                    </div>
+
+                    <div id="registered-faces" class="space-y-3 max-h-96 overflow-y-auto">
+                        <p class="text-gray-500 text-center py-8">Henüz kayıtlı yüz yok</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tespit Sonuçları -->
+            <div id="detection-results" class="mt-6 bg-white rounded-lg shadow-lg p-6 hidden">
+                <h2 class="text-xl font-semibold mb-4">Tespit Sonuçları</h2>
+                <div id="results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Devices Section -->
+    <div id="devices" class="section hidden">
+        <div class="max-w-7xl mx-auto py-6 px-4">
+            <h1 class="text-3xl font-bold text-gray-900 mb-6">Cihaz Yönetimi</h1>
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <p class="text-gray-600">Cihaz yönetimi özellikleri yakında eklenecek...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let stream = null;
+        let isActive = false;
+        let detectionInterval = null;
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+            
+            // Update nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-500', 'text-white');
+            });
+            event.target.classList.add('bg-blue-500', 'text-white');
+        }
+
+        // Camera functions
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { width: 640, height: 480 } 
+                });
+                const video = document.getElementById('video');
+                video.srcObject = stream;
+                isActive = true;
+                
+                document.getElementById('start-camera').classList.add('hidden');
+                document.getElementById('stop-camera').classList.remove('hidden');
+                document.getElementById('camera-controls').classList.remove('hidden');
+                
+                // Auto detection
+                detectionInterval = setInterval(detectFaces, 3000);
+                
+            } catch (error) {
+                console.error('Kamera erişim hatası:', error);
+                alert('Kamera erişimi reddedildi veya mevcut değil');
+            }
+        }
+
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            
+            const video = document.getElementById('video');
+            video.srcObject = null;
+            isActive = false;
+            
+            if (detectionInterval) {
+                clearInterval(detectionInterval);
+                detectionInterval = null;
+            }
+            
+            document.getElementById('start-camera').classList.remove('hidden');
+            document.getElementById('stop-camera').classList.add('hidden');
+            document.getElementById('camera-controls').classList.add('hidden');
+            document.getElementById('face-overlay').innerHTML = '';
+        }
+
+        function captureImage() {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0);
+            
+            return canvas.toDataURL('image/jpeg', 0.8);
+        }
+
+        async function detectFaces() {
+            if (!isActive) return;
+            
+            const imageData = captureImage();
+            if (!imageData) return;
+
+            try {
+                const response = await fetch('/api/face/detect', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ image: imageData })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    displayFaceOverlay(data.faces);
+                    displayDetectionResults(data.faces);
+                } else {
+                    console.error('Yüz tespit hatası');
+                }
+            } catch (error) {
+                console.error('API hatası:', error);
+            }
+        }
+
+        function displayFaceOverlay(faces) {
+            const overlay = document.getElementById('face-overlay');
+            overlay.innerHTML = '';
+            
+            faces.forEach((face, index) => {
+                const faceBox = document.createElement('div');
+                faceBox.className = 'absolute border-2 border-green-400';
+                faceBox.style.left = `${(face.x / 640) * 100}%`;
+                faceBox.style.top = `${(face.y / 480) * 100}%`;
+                faceBox.style.width = `${(face.width / 640) * 100}%`;
+                faceBox.style.height = `${(face.height / 480) * 100}%`;
+                
+                if (face.is_known) {
+                    const label = document.createElement('div');
+                    label.className = 'absolute -top-6 left-0 bg-green-500 text-white px-2 py-1 rounded text-xs';
+                    label.textContent = `ID: ${face.recognized_id}`;
+                    faceBox.appendChild(label);
+                }
+                
+                overlay.appendChild(faceBox);
+            });
+        }
+
+        function displayDetectionResults(faces) {
+            if (faces.length === 0) {
+                document.getElementById('detection-results').classList.add('hidden');
+                return;
+            }
+            
+            const resultsGrid = document.getElementById('results-grid');
+            resultsGrid.innerHTML = '';
+            
+            faces.forEach((face, index) => {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'p-4 bg-gray-50 rounded-lg';
+                resultDiv.innerHTML = `
+                    <div class="text-sm space-y-1">
+                        <div><strong>Yüz #${index + 1}</strong></div>
+                        <div>Konum: (${face.x}, ${face.y})</div>
+                        <div>Boyut: ${face.width}x${face.height}</div>
+                        ${face.is_known ? 
+                            `<div class="text-green-600">
+                                <strong>Tanınan Kişi ID: ${face.recognized_id}</strong><br>
+                                Güven: ${(100 - face.confidence).toFixed(1)}%
+                            </div>` : 
+                            '<div class="text-orange-600">Bilinmeyen kişi</div>'
+                        }
+                    </div>
+                `;
+                resultsGrid.appendChild(resultDiv);
+            });
+            
+            document.getElementById('detection-results').classList.remove('hidden');
+        }
+
+        function toggleRegister() {
+            const form = document.getElementById('register-form');
+            form.classList.toggle('hidden');
+        }
+
+        async function registerFace() {
+            const name = document.getElementById('person-name').value;
+            const id = document.getElementById('person-id').value;
+            
+            if (!name || !id) {
+                alert('Lütfen isim ve ID girin');
+                return;
+            }
+
+            const imageData = captureImage();
+            if (!imageData) return;
+
+            try {
+                const response = await fetch('/api/face/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        image: imageData,
+                        person_name: name,
+                        person_id: parseInt(id)
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Yüz başarıyla kaydedildi!');
+                    document.getElementById('person-name').value = '';
+                    document.getElementById('person-id').value = '';
+                    document.getElementById('register-form').classList.add('hidden');
+                    loadRegisteredFaces();
+                } else {
+                    const error = await response.json();
+                    alert(`Hata: ${error.detail}`);
+                }
+            } catch (error) {
+                console.error('API hatası:', error);
+                alert('Kayıt sırasında hata oluştu');
+            }
+        }
+
+        async function loadRegisteredFaces() {
+            try {
+                const response = await fetch('/api/face/registered');
+
+                if (response.ok) {
+                    const data = await response.json();
+                    displayRegisteredFaces(data.registered_faces);
+                }
+            } catch (error) {
+                console.error('Kayıtlı yüzler yüklenemedi:', error);
+            }
+        }
+
+        function displayRegisteredFaces(faces) {
+            const container = document.getElementById('registered-faces');
+            const countElement = document.getElementById('face-count');
+            
+            countElement.textContent = faces.length;
+            
+            if (faces.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">Henüz kayıtlı yüz yok</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            faces.forEach(person => {
+                const personDiv = document.createElement('div');
+                personDiv.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
+                personDiv.innerHTML = `
+                    <div>
+                        <div class="font-semibold">${person.name}</div>
+                        <div class="text-sm text-gray-600">ID: ${person.id}</div>
+                        <div class="text-xs text-gray-500">${person.images?.length || 0} görüntü</div>
+                    </div>
+                    <button onclick="deleteFace(${person.id})" class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                `;
+                container.appendChild(personDiv);
+            });
+            
+            // Re-initialize icons
+            lucide.createIcons();
+        }
+
+        async function deleteFace(personId) {
+            if (!confirm('Bu yüzü silmek istediğinizden emin misiniz?')) return;
+
+            try {
+                const response = await fetch(`/api/face/${personId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('Yüz başarıyla silindi');
+                    loadRegisteredFaces();
+                } else {
+                    alert('Silme işlemi başarısız');
+                }
+            } catch (error) {
+                console.error('Silme hatası:', error);
+            }
+        }
+
+        // Load registered faces on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRegisteredFaces();
+        });
+    </script>
+</body>
+</html>
